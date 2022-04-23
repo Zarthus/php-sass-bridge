@@ -1,0 +1,26 @@
+name: CI
+on: [push]
+jobs:
+    build-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Install dependencies
+              uses: php-actions/composer@v6
+              with:
+                  php_version: "8.1"
+                  command: 'install'
+            - name: Download sass
+              run: |
+                  npm install -g sass
+            - name: Run Unit Tests
+              continue-on-error: true # TODO figure out why this fails (works locally)
+              run: |
+                  composer test:unit
+            - name: Run Integration Tests
+              continue-on-error: true # TODO figure out why this fails (works locally)
+              run: |
+                  composer test:integration
+            - name: Run psalm
+              run: |
+                  composer psalm

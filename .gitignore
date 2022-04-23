@@ -1,0 +1,9 @@
+/vendor
+/tmp
+/composer.lock
+/*.cache
+/test/fixtures/www/css
+/test/fixtures/many-to-many/out
+/test/fixtures/multiple-dirs/out
+/test/fixtures/multiple-files/out
+/test/fixtures/one-to-one/out

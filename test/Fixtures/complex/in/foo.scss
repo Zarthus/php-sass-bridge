@@ -1,0 +1,11 @@
+@use 'mixins/mixin' as mix;
+@use 'layouts/main';
+@use 'partials/headers';
+
+.secure::before {
+  content: "🔒 ";
+}
+
+h4 {
+  @include mix.reset-list;
+}

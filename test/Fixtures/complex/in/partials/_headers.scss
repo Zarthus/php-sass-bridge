@@ -1,0 +1,9 @@
+@use '../layouts/main' as main;
+
+h1, h2, h3, h4 {
+  color: main.$color;
+}
+
+body {
+  background-color: main.$bgcolor;
+}
