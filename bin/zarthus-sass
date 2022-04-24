@@ -1,0 +1,48 @@
+#!/usr/bin/php
+
+<?php
+
+if (!version_compare(PHP_VERSION, '8.1', '>=')) {
+    fwrite(STDERR, 'PHP version 8.1 or higher required' . PHP_EOL);
+    exit(1);
+}
+
+if (isset($GLOBALS['_composer_autoload_path'])) {
+    define('ZARTHUSSASS_COMPOSER_INSTALL', $GLOBALS['_composer_autoload_path']);
+    unset($GLOBALS['_composer_autoload_path']);
+} else {
+    foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php'] as $file) {
+        if (file_exists($file)) {
+            define('ZARTHUSSASS_COMPOSER_INSTALL', $file);
+            break;
+        }
+    }
+}
+
+if (!defined('ZARTHUSSASS_COMPOSER_INSTALL')) {
+    fwrite(
+        STDERR,
+        'Cannot detect composer installation properly, ensure you\'ve installed dependencies with `composer install`' . PHP_EOL,
+    );
+
+    exit(1);
+}
+
+require ZARTHUSSASS_COMPOSER_INSTALL;
+
+$sassBin = getenv('ZARTHUS_SASS_BINARY');
+if (empty($sassBin)) {
+    $sass = \Zarthus\Sass\SassBuilder::autodetect();
+} else {
+    $sass = \Zarthus\Sass\SassBuilder::fromBinaryPath(trim($sassBin));
+}
+
+echo "Insert file to compile (e.g. \"www/main.scss\"): \n";
+$sassFile = trim(fgets(STDIN));
+
+if (!file_exists($sassFile)) {
+    fwrite(STDERR, 'Input file is not an existing file: ' . $sassFile . PHP_EOL);
+    exit(1);
+}
+
+$sass->getApi()->compile($sassFile);
