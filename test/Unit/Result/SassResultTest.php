@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Zarthus\Sass\UnitTest\Result;
 
+use Monolog\Test\TestCase;
 use Zarthus\Sass\Result\SassFileResult;
-use Zarthus\Sass\TestFramework\UnitTestCase;
 
-final class SassResultTest extends UnitTestCase
+final class SassResultTest extends TestCase
 {
     public function testResult(): void
     {

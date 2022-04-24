@@ -32,7 +32,7 @@ final class SassBinary implements \Stringable
             return;
         }
 
-        throw new SassBinaryException('Cannot locate binary in provided paths');
+        throw new SassBinaryException('Cannot locate binary in provided paths: ' . var_export($paths, true));
     }
 
     public function getSassBinary(): string

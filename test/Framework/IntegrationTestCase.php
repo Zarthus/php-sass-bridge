@@ -16,6 +16,8 @@ class IntegrationTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->sass = SassBuilder::fromBinaryPath('/usr/bin/sass');
+        $this->sass = file_exists('/usr/bin/sass')
+            ? SassBuilder::fromBinaryPath('/usr/bin/sass')
+            : SassBuilder::autodetect();
     }
 }
