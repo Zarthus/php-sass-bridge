@@ -30,13 +30,13 @@ final class DefaultSassApi implements SassApi
             ? SassFileType::Scss
             : SassFileType::Sass;
 
-        $tmp = realpath(sys_get_temp_dir()) . '/zarthus-sass/';
+        $tmp = realpath(sys_get_temp_dir()) . '/php-sass-bridge/';
 
         if (!is_dir($tmp) && !mkdir($tmp) && !is_dir($tmp)) {
             throw new SassException(sprintf('Directory "%s" was not created', $tmp));
         }
 
-        $inFile = $tmp . 'zarthus_' . bin2hex(random_bytes(16)) . '.' . $fileType->value;
+        $inFile = $tmp . 'sass_' . bin2hex(random_bytes(16)) . '.' . $fileType->value;
         $outFile = str_replace('.' . $fileType->value, '.css', $inFile);
 
         file_put_contents($inFile, $string);

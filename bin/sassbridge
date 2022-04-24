@@ -10,6 +10,8 @@
 //  $0 dir-in dir-out # compile entire directory dir-in to dir-out
 // PASSING ARGUMENTS
 //  $0 file.sass out.css --style=compressed # compress out.css
+// QUIRKS
+//  The first two arguments should always be files or directories, not options.
 
 if (!version_compare(PHP_VERSION, '8.1', '>=')) {
     fwrite(STDERR, 'PHP version 8.1 or higher required' . PHP_EOL);

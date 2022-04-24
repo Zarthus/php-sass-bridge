@@ -7,7 +7,7 @@ use Zarthus\Sass\TestFramework\IntegrationTestCase;
 
 final class ProvidedBinaryTest extends IntegrationTestCase
 {
-    private const FILE_PATH = __DIR__ . '/../../bin/zarthus-sass';
+    private const FILE_PATH = __DIR__ . '/../../bin/sassbridge';
 
     public function testBinary(): void
     {
