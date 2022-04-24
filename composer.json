@@ -2,7 +2,6 @@
     "name": "zarthus/sass-bridge",
     "description": "Bridges the dart-sass binary to PHP for development purposes",
     "homepage": "https://github.com/zarthus/php-sass-bridge",
-    "version": "1.0",
     "type": "library",
     "license": "MIT",
     "readme": "README.md",
