@@ -1,6 +1,15 @@
 #!/usr/bin/php
-
 <?php
+// Usages:
+//  $0 # no arguments - stdin will be read
+// FILES
+//  $0 file.sass # compile file.sass to file.css
+//  $0 file.sass out.css # compile file.sass to out.css
+// DIRECTORIES
+//  $0 dir-in # compile entire directory dir-in
+//  $0 dir-in dir-out # compile entire directory dir-in to dir-out
+// PASSING ARGUMENTS
+//  $0 file.sass out.css --style=compressed # compress out.css
 
 if (!version_compare(PHP_VERSION, '8.1', '>=')) {
     fwrite(STDERR, 'PHP version 8.1 or higher required' . PHP_EOL);
@@ -49,7 +58,7 @@ if (!file_exists($sassFile)) {
     exit(1);
 }
 
-$result = $sass->getApi()->compile(
+$sass->getApi()->compile(
     $sassFile,
     $argv[2] ?? null,
     $argc > 3 ? new \Zarthus\Sass\Cli\V1\Options\SassCliOptions(array_slice($argv, 2)) : null,

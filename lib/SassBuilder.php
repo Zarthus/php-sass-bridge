@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Zarthus\Sass;
 
+use Psr\Log\LoggerInterface;
 use Zarthus\Sass\Api\SassApi;
 use Zarthus\Sass\Api\V1\DefaultSassApi;
 use Zarthus\Sass\Api\V1\NullSassApi;
@@ -25,14 +26,15 @@ final class SassBuilder
 
     public function __construct(
         private readonly SassBinary $binary,
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 
-    public static function fromBinaryPath(string $binaryPath): Sass
+    public static function fromBinaryPath(string $binaryPath, ?LoggerInterface $logger = null): Sass
     {
         $bin = new SassBinary([$binaryPath]);
 
-        return (new self($bin))->build();
+        return (new self($bin, $logger))->build();
     }
 
     /**
@@ -40,7 +42,7 @@ final class SassBuilder
      *
      * @throws SassException
      */
-    public static function autodetect(?array $binaryPaths = null): Sass
+    public static function autodetect(?array $binaryPaths = null, ?LoggerInterface $logger = null): Sass
     {
         if ($binaryPaths === null) {
             $path = getenv('PATH');
@@ -52,7 +54,7 @@ final class SassBuilder
         }
         $bin = new SassBinary($binaryPaths);
 
-        return (new self($bin))->build();
+        return (new self($bin, $logger))->build();
     }
 
     // Populates the builder with the Null API, CLI Executor, and ProcessDriver
@@ -96,9 +98,9 @@ final class SassBuilder
     {
         if (null === $this->process) {
             if (class_exists(\Symfony\Component\Process\Process::class, true)) {
-                $this->process = new SymfonyProcessDriver($this->binary);
+                $this->process = new SymfonyProcessDriver($this->binary, $this->logger);
             } else {
-                $this->process = new ShellExecProcessDriver($this->binary);
+                $this->process = new ShellExecProcessDriver($this->binary, $this->logger);
             }
         }
 
