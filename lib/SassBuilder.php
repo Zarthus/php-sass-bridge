@@ -5,9 +5,13 @@ namespace Zarthus\Sass;
 
 use Zarthus\Sass\Api\SassApi;
 use Zarthus\Sass\Api\V1\DefaultSassApi;
+use Zarthus\Sass\Api\V1\NullSassApi;
 use Zarthus\Sass\Cli\V1\Executor\DefaultCliExecutor;
+use Zarthus\Sass\Cli\V1\Executor\NullCliExecutor;
 use Zarthus\Sass\Cli\V1\Executor\SassExecutorInterface;
+use Zarthus\Sass\Exception\SassBinaryException;
 use Zarthus\Sass\Exception\SassException;
+use Zarthus\Sass\Process\Drivers\NullProcessDriver;
 use Zarthus\Sass\Process\Drivers\ShellExecProcessDriver;
 use Zarthus\Sass\Process\Drivers\SymfonyProcessDriver;
 use Zarthus\Sass\Process\ProcessInterface;
@@ -49,6 +53,25 @@ final class SassBuilder
         $bin = new SassBinary($binaryPaths);
 
         return (new self($bin))->build();
+    }
+
+    // Populates the builder with the Null API, CLI Executor, and ProcessDriver
+    public static function withNullHandlers(?SassBinary $binary = null): Sass
+    {
+        if (null === $binary) {
+            $reflection = new \ReflectionClass(SassBinary::class);
+            try {
+                $binary = $reflection->newInstanceWithoutConstructor();
+            } catch (\ReflectionException $e) {
+                throw new SassBinaryException('Cannot mock binary', 0, $e);
+            }
+        }
+
+        return (new self($binary))
+            ->withProcess($process = new NullProcessDriver())
+            ->withApi(new NullSassApi($process))
+            ->withCli(new NullCliExecutor($process))
+            ->build();
     }
 
     public function withProcess(ProcessInterface $process): self
