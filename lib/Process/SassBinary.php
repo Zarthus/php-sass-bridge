@@ -19,16 +19,17 @@ final class SassBinary implements \Stringable
         array $paths,
     ) {
         foreach ($paths as $path) {
-            $files = [$path, rtrim($path, '/') . '/sass'];
-
-            foreach ($files as $file) {
-                if (!is_readable($file) || !file_exists($file) || !is_executable($file)) {
-                    continue;
-                }
-
-                $this->sassBinary = $file;
-                return;
+            $try = $path;
+            if (is_dir($path) && is_readable($path)) {
+                $try .= '/sass';
             }
+
+            if (!file_exists($try) || !is_executable($try)) {
+                continue;
+            }
+
+            $this->sassBinary = $try;
+            return;
         }
 
         throw new SassBinaryException('Cannot locate binary in provided paths');

@@ -37,12 +37,20 @@ if (empty($sassBin)) {
     $sass = \Zarthus\Sass\SassBuilder::fromBinaryPath(trim($sassBin));
 }
 
-echo "Insert file to compile (e.g. \"www/main.scss\"): \n";
-$sassFile = trim(fgets(STDIN));
+if ($argc === 0 || $argc === 1) {
+    echo "Insert file to compile (e.g. \"www/main.scss\"): \n";
+    $sassFile = trim(fgets(STDIN));
+} else {
+    $sassFile = $argv[1];
+}
 
 if (!file_exists($sassFile)) {
     fwrite(STDERR, 'Input file is not an existing file: ' . $sassFile . PHP_EOL);
     exit(1);
 }
 
-$sass->getApi()->compile($sassFile);
+$result = $sass->getApi()->compile(
+    $sassFile,
+    $argv[2] ?? null,
+    $argc > 3 ? new \Zarthus\Sass\Cli\V1\Options\SassCliOptions(array_slice($argv, 2)) : null,
+);

@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace Zarthus\Sass\Api\V1;
 
 use Zarthus\Sass\Api\SassApi;
+use Zarthus\Sass\Cli\V1\Argument\ManyToMany\SassDirectory;
 use Zarthus\Sass\Cli\V1\Argument\OneToOne\SassSingleFile;
 use Zarthus\Sass\Cli\V1\Argument\Output\SassFileOutput;
 use Zarthus\Sass\Cli\V1\Argument\Output\SassNoneOutput;
+use Zarthus\Sass\Cli\V1\Argument\OutputResolver;
 use Zarthus\Sass\Cli\V1\Argument\SassArgumentCollection;
 use Zarthus\Sass\Cli\V1\Options\SassCliOptions;
 use Zarthus\Sass\Exception\SassException;
@@ -52,10 +54,10 @@ final class DefaultSassApi implements SassApi
     {
         $options ??= (new SassCliOptions());
 
-        $output = $outputFile === null ? new SassNoneOutput($inputFile) : new SassFileOutput($outputFile);
+        $output = OutputResolver::resolve($inputFile, $outputFile);
         $command = $this->process->createCommand(
             new SassArgumentCollection([
-                new SassSingleFile($inputFile, $output)
+                is_dir($inputFile) ? new SassDirectory($inputFile, $output) : new SassSingleFile($inputFile, $output)
             ]),
             $options,
         );
