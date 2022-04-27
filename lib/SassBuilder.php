@@ -50,6 +50,7 @@ final class SassBuilder
                 throw new SassException('Cannot autodetect, PATH env is not set');
             }
 
+            /** @var list<string> $binaryPaths */
             $binaryPaths = array_filter(explode(PHP_OS_FAMILY === 'Windows' ? ';' : ':', trim($path)));
         }
         $bin = new SassBinary($binaryPaths);
